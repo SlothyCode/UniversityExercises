@@ -1,87 +1,83 @@
-import java.lang.Object;
 
-class Main extends BIO
+/**
+ * Write a description of class Main here.
+ *
+ * @author Shane Butt sb1451
+ * @version 06/10/2017
+ */
+public class Main
 {
-    
     public static void main(String[] args)
     {
-        System.out.println("#Width: ");
-        int width = BIO.getInt();
-        System.out.println("#Line: ");
-        String line = BIO.getString();
-        
-        while (!line.equals("END"))
+        int Size = BIO.getInt();
+        int Offset = 1;
+        int y = 1;
+        if (Size%2==0)
         {
-            String processed = reformat(line, width);
-            processed = processed.replace(" ", ".");
-            System.out.println(processed);
-            line = BIO.getString();
+            System.out.println("Side of diamond ("+Size+") must be odd");
+            return;
         }
-    }
-       
-    public static int spaces(String line)
-    {
-        return (line.length() - line.replace(" ", "").length());
-    }
-    
-    public static String stringOfSpaces(int num)
-    {
-        String spaces = "";
-        for (int i = 1; i <= num; i++)
+        if (Size < 5 || Size > 41)
         {
-            spaces = spaces + " ";
+            System.out.println("Side of diamond ("+Size+") must be between 5 & 41");
+            return;
         }
-        return spaces;
-    }
-    
-    public static String extraSpace(int extra)
-    {
-        if (extra > 0) { return " "; } else { return ""; }
-    }
-    
-    public static int[] findSpaces(int numSpaces, String str)
-    {
-        int[] arr = new int[numSpaces];
-        int length = str.length();
-        int index = 0;
-        for (int i = 0; i < length; i++)
+        while (y <= Size)
         {
-            if (str.charAt(i) == ' ')
+            for (int x = 1; x <= Size; x++)
             {
-                arr[index] = i;
-                ++index;
+                String input = "";
+                if (y==1 || y==Size)
+                {
+                    if (x==(Size+1)/2)
+                    {
+                        input = "*";
+                    }
+                    else
+                    {
+                        input = ".";
+                    }
+                }
+                if (y != (Size+1)/2 && !(y==1 || y==Size))
+                {
+                    if ( y > ((Size+1)/2) )
+                    {
+                        Offset = Math.abs( y - Size);
+                    }
+		   else
+		   {
+			Offset = y-1;
+		   }
+                    if ( (x==((Size+1)/2)+Offset) || (x==((Size+1)/2)-Offset) )
+                    {
+                        input = "*";
+                    }
+                    else
+                    {
+                        input = ".";
+                    }
+                }
+                else if (y==(Size+1)/2)
+                {
+                    if (x==1 || x==Size)
+                    {
+                        input = "*";
+                    }
+                    else
+                    {
+                        input = ".";
+                    }
+                }
+                if (x!=Size)
+                {
+                    System.out.print(input);
+                }
+                else
+                {
+                    System.out.println(input);
+                }
             }
+            y++;
         }
-        return arr;
     }
-    
-    public static String reformat(String originalLine, int width)
-    {
-       String formatted = originalLine;
-       int numGaps = spaces(originalLine);
-       int numSpaces = width - originalLine.replace(" ", "").length();
-       if (numGaps==0){return originalLine + stringOfSpaces(width-originalLine.length());}
-       else
-       {
-           double dist = (double) numSpaces / numGaps;
-           System.out.println("#" + dist);
-           int distributed = (int) Math.floor(dist);
-           System.out.println("#" + distributed);
-           int extraSpaces = numSpaces%numGaps;
-           System.out.println("#" + extraSpaces);
-           int[] spaceLocations = findSpaces(numGaps, originalLine);
-       
-           formatted = formatted.replace(" ", stringOfSpaces(distributed));
-           
-           StringBuffer str = new StringBuffer(formatted);
-           
-           for(int i = 0; i < spaceLocations.length; i++)
-           {
-               str.insert(spaceLocations[i] + i, extraSpace(extraSpaces));
-               extraSpaces--;
-           }
-           return str.toString();
-       }
-    }
-       
 }
